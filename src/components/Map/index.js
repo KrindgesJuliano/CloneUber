@@ -3,12 +3,17 @@ import {View} from 'react-native';
 import MapView from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 
+import Search from '../Search';
+
 // import { Container } from './styles';
 
 export default class Map extends Component {
-  state = {
-    region: null,
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      region: null,
+    };
+  }
 
   async componentDidMount() {
     Geolocation.getCurrentPosition(
@@ -17,8 +22,8 @@ export default class Map extends Component {
           region: {
             latitude,
             longitude,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
+            latitudeDelta: 0.0143,
+            longitudeDelta: 0.0134,
           },
         });
       },
@@ -41,6 +46,7 @@ export default class Map extends Component {
           showsUserLocation
           loadingEnabled
         />
+        <Search />
       </View>
     );
   }
