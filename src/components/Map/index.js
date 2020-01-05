@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import {View} from 'react-native';
+import {View, Text} from 'react-native';
 import MapView from 'react-native-maps';
 import Geolocation from '@react-native-community/geolocation';
 
 import Search from '../Search';
+import Directions from '../Directions';
 
 // import { Container } from './styles';
 
@@ -12,6 +13,7 @@ export default class Map extends Component {
     super(props);
     this.state = {
       region: null,
+      destination: null,
     };
   }
 
@@ -36,17 +38,40 @@ export default class Map extends Component {
     );
   }
 
+  handleLocationSelected = (data, {geometry}) => {
+    const {
+      location: {lat: latitude, lng: longitute},
+    } = geometry;
+
+    this.setState({
+      destination: {
+        latitude,
+        longitute,
+        title: data.structured_formatting.main_text,
+      },
+    });
+  };
+
   render() {
-    const {region} = this.state;
+    const {region, destination} = this.state;
+    console.log(destination);
+
     return (
       <View style={{flex: 1}}>
         <MapView
           style={{flex: 1}}
-          initialRegion={region}
+          region={region}
           showsUserLocation
-          loadingEnabled
-        />
-        <Search />
+          loadingEnabled>
+          {destination && (
+            <Directions
+              origin={region}
+              destination={destination}
+              onReady={() => {}}
+            />
+          )}
+        </MapView>
+        <Search onLocationSelected={this.handleLocationSelected} />
       </View>
     );
   }
